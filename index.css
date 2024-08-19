@@ -20,11 +20,11 @@ body {
     margin: 0 auto;
   }
   
-  .form-container {
-    position: fixed;
+  .form-container {    
     top: 20px;
     left: 20px;
-    width: 400px;
+    width: 500px;
+    height: 600px;
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -35,7 +35,7 @@ body {
   .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin-bottom: 15px;    
   }
   
   .form-group label {
@@ -44,12 +44,21 @@ body {
     font-weight: bold;
   }
   
-  .form-group textarea {
+  .form-group input {
     padding: 10px;
     font-size: 14px;
     resize: vertical;
     border: 1px solid #ccc;
     border-radius: 4px;
+    height: 30px;
+  }
+
+  .checkout{
+    margin-top: 30px;
+    border: 2px solid  #ccc; 
+    padding: 20px; 
+    border-radius: 10px; 
+    height: 100px;
   }
   
   .button-group {
@@ -79,7 +88,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 10px;    
     width: 100%;
-    margin-left: 450px;    
+    margin-left: 10px;    
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

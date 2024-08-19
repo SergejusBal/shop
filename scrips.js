@@ -2,65 +2,63 @@ var url = "http://35.228.181.251:8080";
 var offset = 0;
 var itemsInCart = 0;
 
-document.getElementById("createPost").addEventListener("click", async function(event) {
+document.getElementById("Login").addEventListener("click", async function(event) {
 
-    if(!getCookie("paymentCode")) {
-        document.getElementById("response").innerHTML = "Payment needed";
-        return;
-    }
+    let user = await fillUserData();
 
-    let post = fillPostData();
-    if(post){
-        await createPost(post);    
-        clearPostData();
-    }   
+    if(await login(user)){
+        window.location.href = 'adminPage.html';
+    };
+
+    clearPostData();
 
 });
 
-document.getElementById("showPosts").addEventListener("click", async function(event) {
 
-    let posts = await getItems(offset,10);
-    if(posts){
-        await displayPosts(posts);
-    }
 
-});
 
-async function createPost(post) {     
+// document.getElementById("showPosts").addEventListener("click", async function(event) {
+
+//     let posts = await getItems(offset,10);
+//     if(posts){
+//         await displayPosts(posts);
+//     }
+
+// });
+
+ async function login(user) {     
 
     try{   
-        let response = await fetch(url + '/posts', {
+        let response = await fetch(url + '/user/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json', 
-                'PaymentCode':  getCookie("paymentCode") + "",
-                'PaymentID':  getCookie("paymentID"),            
+                'Content-Type': 'application/json'                                        
             },
             body: JSON.stringify({
-            "name":post.name,           
-            "content":post.content,
-            "contacts":post.contacts          
+            "name": user.name,           
+            "password":user.password                  
             }),        
         })
 
         if (response.status == 500){
-            document.getElementById("response").innerHTML = await response.text();
+            
             return;
         }
 
         if (response.status == 402){
-            document.getElementById("response").innerHTML = await response.text();
+            
             return;
         }        
 
         if (response.status == 400){
-            document.getElementById("response").innerHTML = await response.text();
+            
             return;
         }
-        if (response.status == 200) {
-            document.getElementById("response").innerHTML = await response.text();
-            return;
+        if (response.status == 200) {            
+            setCookie("JTW", await response.text(),7);
+            setCookie("UserName",user.name + "",7); 
+            return true;
         }  
 
     }    
@@ -205,45 +203,19 @@ async function getItembyID(id){
 
 }
 
-function fillPostData(){
-    var post = {};   
-
-    if(document.getElementById("name").value.length < 50){
-        post.name = document.getElementById("name").value;
-    }
-    else{
-        document.getElementById("response").innerHTML = "Name to long";
-        return false; 
-    }  
-
-    if(document.getElementById("content").value.length < 200){
-        post.content = document.getElementById("content").value; 
-    }
-    else{
-        document.getElementById("response").innerHTML = "Content to long";
-        return false; 
-    }  
-
-    if(checkphone(document.getElementById("contacts").value)) {  
-         post.contacts = document.getElementById("contacts").value;    
-    }    
-    else{
-        document.getElementById("response").innerHTML = "Invalid phone format";
-        return false; 
-    }   
-    return post;
+function fillUserData(){
+    var user = {};   
+    
+    user.name = document.getElementById("name").value;
+    user.password = document.getElementById("password").value;  
+     
+    return user;
 
 }
 
 function clearPostData(){
     document.getElementById("name").value = "";
-    document.getElementById("content").value = "";
-    document.getElementById("contacts").value = "";
-}
-
-function checkphone(phoneNumber){
-    const phoneNumberPattern = /^\+370\d{8}$/;
-    return phoneNumberPattern.test(phoneNumber);   
+    document.getElementById("password").value = "";
 }
 
 
@@ -309,10 +281,12 @@ document.getElementById("checkout").addEventListener("click", async () => {
     if (error) {
     console.error("Stripe Checkout error:", error.message);
     }
+    deleteCookie("ItemCart");    
 });
 
 
 async function createOrder() {     
+
 
     try{   
         let response = await fetch(url + '/order/new', {
@@ -355,6 +329,24 @@ async function createOrder() {
 }
 
 
+function calcutalePrice(){
+    jsonStringItemCart = getCookie("ItemCart");
+    
+    tempCart = jsonStringItemCart ? JSON.parse(jsonStringItemCart) : [];  
+
+    if(tempCart.length = 0) return 0;
+
+    let cartPrice = 0;
+    tempCart.forEach(item => {
+        cartPrice += item.price;
+
+    });
+    
+    
+    
+
+
+}
 
 
 

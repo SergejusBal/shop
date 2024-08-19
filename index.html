@@ -10,34 +10,39 @@
   <script src="https://js.stripe.com/v3/" defer></script>  
   <script src="cookies.js" defer></script>     
 
-  <title>Posts</title>
+  <title>Shop</title>
 </head>
 
 <body>
   
   <div class="container">
     <div class="form-container">
-      <h1>Add Posts</h1>
+      <h1>Login </h1>
       <div class="form-group">
-        <label for="name">Name:</label>
-        <textarea id="name"></textarea>
-      </div>
+        <label for="name">Username:</label>
+        <input id="name"></input>
+      </div>     
 
       <div class="form-group">
-        <label for="content">Content:</label>
-        <textarea id="content"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="contacts">Contacts:</label>
-        <textarea id="contacts"></textarea>
+        <label for="password">Password:</label>
+        <input type="password" id="password"> </input>
       </div>      
 
-      <div class="button-group">
-        <button id="createPost">Create Post</button> 
-        <button id="showPosts">Show Posts</button>
-        <button id="checkout">Payment</button> 
+      <div class="button-group">        
+        <button id="Login">Login</button> 
+        <button id="Register">Register</button>
 
+      </div> 
+
+      <div class="checkout">
+          
+       
+        
+      </div>
+        
+
+      <div class="button-group">        
+      <button id="checkout">Payment</button> 
       </div> 
       <div>
         <p id="response"> </p>
