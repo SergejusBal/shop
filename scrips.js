@@ -1,30 +1,68 @@
 var url = "http://35.228.181.251:8080";
 var offset = 0;
-var itemsInCart = 0;
 
 document.getElementById("Login").addEventListener("click", async function(event) {
 
     let user = await fillUserData();
+    if(document.getElementById("Login").textContent == "Log Out") {
+        logOutState();        
+        return;
+    }
 
-    if(await login(user)){
-        window.location.href = 'adminPage.html';
+    if(await login(user)){      
+        loginState();      
     };
 
     clearPostData();
 
 });
 
+document.getElementById("reset").addEventListener("click", async function(event) {
+
+    document.getElementById("price").innerHTML = "Total is price: " + 0 + " EUR";
+    document.getElementById("itemCount").innerHTML = "Item count is: " + 0;
+    deleteCookie("ItemCart");
+
+});
 
 
+document.getElementById("Register").addEventListener("click", async function(event) {
 
-// document.getElementById("showPosts").addEventListener("click", async function(event) {
+    let user = await fillUserData();
+    if(document.getElementById("Register").textContent == "Admin Page") {
+        window.location.href = 'adminPage.html';
+        return;
+    }
 
-//     let posts = await getItems(offset,10);
-//     if(posts){
-//         await displayPosts(posts);
-//     }
+    if(await Register(user)){
+        document.getElementById("response").innerHTML = "Resgistration successful"; 
+    };
 
-// });
+    clearPostData();
+    
+
+});
+
+function loginState(){
+    document.getElementById("userdiv").style.display = "none";
+    document.getElementById("passworddiv").style.display = "none";
+    document.getElementById("loginheader").innerHTML = "";
+    document.getElementById("Login").textContent = "Log Out";
+    document.getElementById("Register").textContent = "Admin Page";
+    document.getElementById("sidepannel").style.height= "700px";
+
+}
+function logOutState(){
+    document.getElementById("userdiv").style.display = "flex";
+    document.getElementById("passworddiv").style.display = "flex";
+    document.getElementById("loginheader").innerHTML = "Login";
+    document.getElementById("Login").textContent = "Login";
+    document.getElementById("Register").textContent = "Register";
+    document.getElementById("sidepannel").style.height= "950px";
+    deleteCookie("JTW");
+    
+}
+
 
  async function login(user) {     
 
@@ -58,6 +96,47 @@ document.getElementById("Login").addEventListener("click", async function(event)
         if (response.status == 200) {            
             setCookie("JTW", await response.text(),7);
             setCookie("UserName",user.name + "",7); 
+            return true;
+        }  
+
+    }    
+    catch(error){
+        console.error('Error:', error);
+    }    
+    
+}
+
+async function Register(user) {     
+
+    try{   
+        let response = await fetch(url + '/user/register', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'                                        
+            },
+            body: JSON.stringify({
+            "name": user.name,           
+            "password":user.password                  
+            }),        
+        })
+
+        if (response.status == 500){
+            
+            return;
+        }
+
+        if (response.status == 402){
+            
+            return;
+        }        
+
+        if (response.status == 400){
+            
+            return;
+        }
+        if (response.status == 200) {           
+            
             return true;
         }  
 
@@ -164,8 +243,7 @@ function displayPosts(items) {
 }
 
 async function addToCart(id){
-    itemsInCart++;
-    document.getElementById("response").innerHTML = itemsInCart;
+   
 
     jsonStringItemCart = getCookie("ItemCart");
     
@@ -175,6 +253,7 @@ async function addToCart(id){
     tempCart.push(item);  
       
     setCookie("ItemCart",JSON.stringify(tempCart),7);
+    showCart();
 
 }
 
@@ -213,24 +292,24 @@ function fillUserData(){
 
 }
 
+function fillOrderData(){
+    var order = {};   
+    
+    order.customerName = document.getElementById("customerName").value;
+    order.customerAddress = document.getElementById("customerAddress").value; 
+    order.customerEmail = document.getElementById("customerEmail").value;  
+     
+    return order;
+
+}
+
 function clearPostData(){
     document.getElementById("name").value = "";
     document.getElementById("password").value = "";
 }
 
 
-document.addEventListener('DOMContentLoaded',  async function() {    
-    let load =0;
 
-    while(!hasVerticalScrollBar() && load < 10){  
-        let posts = await getItems(offset,10);
-        if(posts){
-            await displayPosts(posts);
-        } 
-        load++;        
-    } 
-
-});
 
 window.addEventListener('scroll', async function() {
         
@@ -274,19 +353,20 @@ document.getElementById("checkout").addEventListener("click", async () => {
     const sessionId = session.id;
     setCookie("paymentCode", session.paymentCode,1);
     setCookie("paymentID", session.paymentID,1);
-
+    deleteCookie("ItemCart");    
     // Redirect to Stripe Checkout
     const { error } = await stripe.redirectToCheckout({ sessionId });
 
     if (error) {
     console.error("Stripe Checkout error:", error.message);
     }
-    deleteCookie("ItemCart");    
+   
 });
 
 
 async function createOrder() {     
 
+    let order = fillOrderData();
 
     try{   
         let response = await fetch(url + '/order/new', {
@@ -298,8 +378,10 @@ async function createOrder() {
             },
             body: JSON.stringify({
             "products": getCookie("ItemCart"), 
-            "totalPrices": 1,
-                     
+            "totalPrices": calcutalePrice(),
+            "customerName": order.customerName,
+            "customerAddress": order.customerAddress,
+            "customerEmail": order.customerEmail,                     
             }),        
         })
 
@@ -332,23 +414,92 @@ async function createOrder() {
 function calcutalePrice(){
     jsonStringItemCart = getCookie("ItemCart");
     
-    tempCart = jsonStringItemCart ? JSON.parse(jsonStringItemCart) : [];  
+    itemCart = jsonStringItemCart ? JSON.parse(jsonStringItemCart) : []; 
 
-    if(tempCart.length = 0) return 0;
-
+    if(itemCart.length == 0) return 0;
+  
     let cartPrice = 0;
-    tempCart.forEach(item => {
+    itemCart.forEach(item => {         
         cartPrice += item.price;
-
     });
     
+    return cartPrice.toFixed(2);
+}
+
+function calcutaleItemCount(){
+    jsonStringItemCart = getCookie("ItemCart");
     
-    
+    itemCart = jsonStringItemCart ? JSON.parse(jsonStringItemCart) : [];  
+
+    if(itemCart.length == 0) return 0;
+
+    let itemsCount = 0;
+    itemCart.forEach(item => {
+        itemsCount++;    
+    });   
+
+    return itemsCount;  
 
 
 }
 
 
+async function autologin(){
+    let jwttoken =  getCookie("JTW");
+    let name =  getCookie("UserName");
+    if(!jwttoken) return false;
+
+    try{
+        let response = await fetch(url +"/user/autoLogin/" + name, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': jwttoken
+            },                                 
+        });
+
+        if (response.status == 401){
+            return false;
+        }
+
+        if (response.status == 200){
+            return true;
+        }         
+
+        return false;  
+        
+    }    
+    catch(error){
+        return false;
+
+    }          
+    
+}
+
+document.addEventListener('DOMContentLoaded',  async function() {    
+    let load = 0;
+
+    while(!hasVerticalScrollBar() && load < 10){  
+        let posts = await getItems(offset,10);
+        if(posts){
+            await displayPosts(posts);
+        } 
+        load++;        
+    } 
+
+    showCart();
+
+    if(await autologin())  loginState();  
+    else logOutState();;
+
+
+});
+
+function showCart(){
+    document.getElementById("price").innerHTML = "Total is price: " + calcutalePrice() + " EUR";
+    document.getElementById("itemCount").innerHTML = "Item count is: " + calcutaleItemCount();
+}
 
 
 

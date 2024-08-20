@@ -16,32 +16,46 @@
 <body>
   
   <div class="container">
-    <div class="form-container">
-      <h1>Login </h1>
-      <div class="form-group">
+    <div class="form-container" id="sidepannel">
+      <h1 id="loginheader">Login</h1>
+      <div class="form-group" id ="userdiv">
         <label for="name">Username:</label>
-        <input id="name"></input>
+        <input id="name" ></input>
       </div>     
 
-      <div class="form-group">
+      <div class="form-group" id ="passworddiv">
         <label for="password">Password:</label>
         <input type="password" id="password"> </input>
       </div>      
 
-      <div class="button-group">        
+      <div class="button-group" style="padding-bottom: 30px; border-bottom: 2px solid #aaa2a2">        
         <button id="Login">Login</button> 
         <button id="Register">Register</button>
-
       </div> 
 
-      <div class="checkout">
-          
+      <h1>Customers details </h1>
+      <div class="form-group">
+        <label for="customerName">Customer Name:</label>
+        <input id="customerName"></input>
+      </div>  
+      <div class="form-group">
+        <label for="customerAddress">Customer Address:</label>
+        <input id="customerAddress"></input>
+      </div>  
+      <div class="form-group">        
+        <label for="customerEmail">Customer Email:</label>
+        <input id="customerEmail"></input>
+      </div>  
        
-        
+
+      <div class="checkout">
+        <p id="price"></p>
+        <p id="itemCount"></p> 
       </div>
         
 
-      <div class="button-group">        
+      <div class="button-group">  
+      <button id="reset">Reset</button>       
       <button id="checkout">Payment</button> 
       </div> 
       <div>
