@@ -6,11 +6,14 @@
   <title>Upload Image to ImgBB</title>
 </head>
 <body>
-  
+
   <input type="file" id="imageInput" />
   <button id="imageUpload">Upload</button>
 
   <script>
+  img ? img : "";
+  var img = null; 
+
     document.getElementById("imageUpload").addEventListener("click", async function(event) {
 
       const apiKey = '23e1193eb5a7e3a11ab320ea606bf2f7';  

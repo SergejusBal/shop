@@ -17,6 +17,10 @@ document.getElementById("Login").addEventListener("click", async function(event)
 
 });
 
+document.getElementById("cartbutton").addEventListener("click", async function(event) {
+    window.location.href = 'cart.html';
+});
+
 document.getElementById("reset").addEventListener("click", async function(event) {
 
     document.getElementById("price").innerHTML = "Total is price: " + 0 + " EUR";
@@ -49,7 +53,7 @@ function loginState(){
     document.getElementById("loginheader").innerHTML = "";
     document.getElementById("Login").textContent = "Log Out";
     document.getElementById("Register").textContent = "Admin Page";
-    document.getElementById("sidepannel").style.height= "700px";
+    document.getElementById("sidepannel").style.height= "770px";
 
 }
 function logOutState(){
@@ -58,7 +62,7 @@ function logOutState(){
     document.getElementById("loginheader").innerHTML = "Login";
     document.getElementById("Login").textContent = "Login";
     document.getElementById("Register").textContent = "Register";
-    document.getElementById("sidepannel").style.height= "950px";
+    document.getElementById("sidepannel").style.height= "1010px";
     deleteCookie("JTW");
     
 }
@@ -322,7 +326,7 @@ window.addEventListener('scroll', async function() {
         }
         hasLoaded = true;        
     }
-    else if (window.innerHeight + window.scrollY + 100 < document.body.offsetHeight) {
+    else if (window.innerHeight + window.scrollY < document.body.offsetHeight) {
         hasLoaded = false;
     }
 
@@ -491,7 +495,7 @@ document.addEventListener('DOMContentLoaded',  async function() {
     showCart();
 
     if(await autologin())  loginState();  
-    else logOutState();;
+    else logOutState();
 
 
 });
