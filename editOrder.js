@@ -1,5 +1,5 @@
-var url = "http://35.228.181.251:8080";
-
+//var url = "http://35.228.181.251:8080";
+var url = "http://localhost:7778";
 
 document.getElementById("back").addEventListener("click", async function(event) {
     window.location.href = 'adminPage.html';   
