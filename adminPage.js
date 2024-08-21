@@ -106,7 +106,7 @@ function clearPostData(){
 }
 
 function homepage(){
-    window.location.href = "http://127.0.0.1:5500/index.html";
+    window.location.href = "index.html";
 }
 
 document.getElementById("imageUpload").addEventListener("click", async function(event) {
