@@ -1,4 +1,5 @@
-var url = "http://35.228.181.251:8080";
+//var url = "http://35.228.181.251:8080";
+var url = "http://localhost:7778";
 var offset =0;
 var img = null;
 
@@ -180,7 +181,7 @@ document.getElementById("imageUpload").addEventListener("click", async function(
 }
 document.addEventListener('DOMContentLoaded',  async function() {    
 
-    if(!(await autologin()))  window.location.href = "http://127.0.0.1:5500/index.html"; 
+    if(!(await autologin()))  window.location.href = "index.html"; 
 });
 
  async function getOrders(){
@@ -198,7 +199,7 @@ async function getOrdersFromApi(){
 
     if (!token) {
         // Redirect to login if no token is found
-        window.location.href = "http://127.0.0.1:5500/index.html";
+        window.location.href = "index.html";
         return;
     }
     // Fetch Orders directly using the token
