@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="adminPage.css">   
+
+  
+  <script src="adminPage.js" defer></script>  
+  <script src="cookies.js" defer></script>     
+
+  <title>Admin page</title>
+</head>
+
+<body>
+  
+  <div class="container">
+    <div class="form-container">
+      <h1>Add new item</h1>
+
+      <div class="form-group">
+        <label for="name">Name<span style="color: red;">*</span>:</label>
+        <textarea id="name" placeholder="Enter name here" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price<span style="color: red;">*</span>:</label>
+        <textarea id="price" placeholder="Enter price" required></textarea>
+      </div> 
+
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" placeholder="Item description *not required*"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <textarea id="category" placeholder="Item's category *not required*"></textarea>
+      </div> 
+      
+      <input type="file" id="imageInput" />
+      <button id="imageUpload">Upload</button>
+
+
+      <div class="button-group">
+        <button id="addItem" >Add item</button> 
+        <button id="showOrders" onclick="getOrders()">Show Orders</button>
+        <button id="homepage" onclick="homepage()">Home page</button> 
+
+      </div> 
+      <div>
+        <p id="response"> </p>
+      </div>     
+    </div>
+
+    <div class="ordersContainer", id="ordersContainer">
+      
+    </div>
+      
+         
+  </div> 
+
+</body>
+</html>
