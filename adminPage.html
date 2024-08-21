@@ -17,7 +17,7 @@
 <body>
   
   <div class="container">
-    <div class="form-container">
+    <div class="form-container" style="height: 600px;">      
       <h1>Add new item</h1>
 
       <div class="form-group">
@@ -39,15 +39,24 @@
         <label for="category">Category:</label>
         <textarea id="category" placeholder="Item's category *not required*"></textarea>
       </div> 
+
+      <div class="form-group">
+        <select id="select-payment">
+          <option value="Paid" selected>Paid</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="pending">pending</option>        
+      </select>
+      </div> 
+      
       
       <input type="file" id="imageInput" />
       <button id="imageUpload">Upload</button>
 
-
       <div class="button-group">
         <button id="addItem" >Add item</button> 
         <button id="showOrders" onclick="getOrders()">Show Orders</button>
-        <button id="homepage" onclick="homepage()">Home page</button> 
+
+        <button id="homepage" onclick="homepage()">Home page</button>        
 
       </div> 
       <div>

@@ -6,8 +6,7 @@ body {
 }
 
 #ordersContainer { 
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+     
     gap: 10px;    
     width: 100%;
     margin-left: 10px;    
@@ -19,7 +18,7 @@ body {
   }
 
 .order {
-    background-color: rgb(244, 234, 218);
+    background-color: rgb(243, 241, 238);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -37,6 +36,96 @@ body {
     font-weight: bold;
 }
 
-.text {
-    
+
+
+.button-group {
+    display: flex;   
+    justify-content: space-between; 
+    width: 100%;
+    margin: 0 auto; 
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .button-group button {    
+
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button-group button:hover {
+    background-color: #45a049;
+  }
+   
+  
+  .event-table {
+    margin-top: 20px;
+    width: 100%;    
+    border-collapse: collapse;
+  }
+  
+  .event-table th, .event-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .event-table th {
+    background-color: #2a8a21;
+    color: #fff;
+    text-align: left;
+  }
+  
+  .event-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .event-table tbody tr:hover {
+    background-color: #ddd;
+  }
+
+  #price{
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;    
+    resize: vertical;
+    color: #1f913b;
+    font-weight: bold;
+  }
+
+.id {    
+    font-weight: bold;    
+}
+
+.order-data {
+    display: flex;
+    width: 100%;
+    flex-direction: column;    
+    border: 1px solid #ccc;    
+    margin-top: 20px;
+  
+}
+
+.order-data span {
+    margin: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+
+.order-info {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #eee; 
+    margin-bottom: 15px;
+    line-height: 1.8;
+    text-align: justify;
+    font-size: 20px;
+    color: #333; 
+  }
+
+.price{
+    color: #1f913b;
 }

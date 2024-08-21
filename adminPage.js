@@ -12,6 +12,7 @@ document.getElementById("addItem").addEventListener("click", async function(even
 
 });
 
+
 async function addItem(post) {   
     let jwtToken = getCookie("JTW");
     let username = getCookie("UserName");
@@ -193,7 +194,7 @@ async function getOrdersFromApi(){
     const username = getCookie("UserName");
     var offset = 0;
     var limit = 1000;
-    var paymentStatus = "pending";
+    var paymentStatus = document.getElementById("select-payment").value;
 
     if (!token) {
         // Redirect to login if no token is found
@@ -231,95 +232,69 @@ async function getOrdersFromApi(){
 
     
 function displayOrders(orders) {
-    const container = document.getElementById('ordersContainer'); // Select the container div
-    container.innerHTML = ''; // Clear existing content in the container
+
+
+    const container = document.getElementById('ordersContainer'); 
+    container.innerHTML = ''; 
 
     orders.forEach(order => {
         const newOrder = document.createElement("div");
-        newOrder.className = "order"; // Set a class for styling
-
-        // Create and append ID
+        newOrder.className = "order"; 
+        
         const idSpan = document.createElement("span");
-        idSpan.className = "text";
+        idSpan.className = "id";
         idSpan.textContent = "Order ID: " + order.id;
         newOrder.appendChild(idSpan);
 
-        // Create a container for products
-        const productsContainer = document.createElement("div");
-        productsContainer.className = "products-container";
+        const orderTable = createTable(order.products);
+        newOrder.appendChild(orderTable);
+
+        const itemBody = document.createElement("div");
+        itemBody.className = "order-data";
+
+            const spamName = document.createElement("span");
+            const spamAddress = document.createElement("span");
+            const spamEmail = document.createElement("span");
+
+            spamName.textContent = "Customer name: " + (order.customerName ? order.customerName : "No data");
+            spamAddress.textContent = "Customer Address: " + (order.customerAddress ? order.customerAddress : "No data");
+            spamEmail.textContent = "Customer Email: " + (order.customerEmail ? order.customerEmail :"No data");
+
+        itemBody.appendChild(spamName);
+        itemBody.appendChild(spamAddress);
+        itemBody.appendChild(spamEmail);
+
+        newOrder.appendChild(itemBody);
+
+        const orderInfo = document.createElement("div");
+        orderInfo.className = "order-info";
         
-        // Create and append a header for products
-        const productsHeader = document.createElement("span");
-        productsHeader.className = "text";
-        productsHeader.textContent = "Products:";
-        productsContainer.appendChild(productsHeader);
+            const price = document.createElement("span");
+            price.className = "price";
+            price.textContent = "Total price: " + order.totalPrices + " EUR";
+            const status = document.createElement("span");
+            status.className = "status";
+            status.textContent = "Status: " + order.paymentStatus;
 
-        // Check if products is an array, if not handle accordingly
-        if (Array.isArray(order.products)) {
-            // Loop through each product and add it to the products container
-            order.products.forEach(product => {
-                const productSpan = document.createElement("span");
-                productSpan.className = "product-item";
-                productSpan.textContent = product;
-                productsContainer.appendChild(productSpan);
-            });
-        } else if (typeof order.products === 'string') {
-            // If products is a string, treat it as a single product
-            const productSpan = document.createElement("span");
-            productSpan.className = "product-item";
-            productSpan.textContent = order.products;
-            productsContainer.appendChild(productSpan);
-        } else {
-            // Handle cases where products is undefined or another type
-            const noProductsSpan = document.createElement("span");
-            noProductsSpan.className = "product-item";
-            noProductsSpan.textContent = "No products available";
-            productsContainer.appendChild(noProductsSpan);
-        }
+            orderInfo.appendChild(status);
+            orderInfo.appendChild(price);            
 
-        // Append the products container to the order
-        newOrder.appendChild(productsContainer);
+            newOrder.appendChild(orderInfo); 
 
-        // Create and append Total Price
-        const totalPriceSpan = document.createElement("span");
-        totalPriceSpan.className = "text";
-        const totalPrice = order.totalPrice !== undefined ? order.totalPrice.toFixed(2) : '0.00';
-        totalPriceSpan.textContent = "Total Price: $" + totalPrice;
-        newOrder.appendChild(totalPriceSpan);
+        const buttonDiv = document.createElement("div");
+        buttonDiv.className = 'button-group';
+        buttonDiv.style.width = "100%";
 
-        // Create and append Customer Name
-        const customerNameSpan = document.createElement("span");
-        customerNameSpan.className = "text";
-        customerNameSpan.textContent = "Customer Name: " + order.customerName;
-        newOrder.appendChild(customerNameSpan);
+        const modifyButton = document.createElement('button');                
+            modifyButton.textContent = 'Edit order';           
+            modifyButton.style.width = "100px"; 
+            modifyButton.style.alignSelf = "flex-end";      
+            modifyButton.onclick = async function() {                                      
+                window.location.href = "editOrder.html?id=" + order.id;
+            };  
 
-        // Create and append Customer Address
-        const customerAddressSpan = document.createElement("span");
-        customerAddressSpan.className = "text";
-        customerAddressSpan.textContent = "Customer Address: " + order.customerAddress;
-        newOrder.appendChild(customerAddressSpan);
-
-        // Create and append Customer Email
-        const customerEmailSpan = document.createElement("span");
-        customerEmailSpan.className = "text";
-        customerEmailSpan.textContent = "Customer Email: " + order.customerEmail;
-        newOrder.appendChild(customerEmailSpan);
-
-        // Create and append Payment Status
-        const paymentStatusSpan = document.createElement("span");
-        paymentStatusSpan.className = "text";
-        paymentStatusSpan.textContent = "Payment Status: " + order.paymentStatus;
-        newOrder.appendChild(paymentStatusSpan);
-
-        // Optionally add some spacing and styles for better UI
-        newOrder.style.marginBottom = "15px";
-        newOrder.style.padding = "10px";
-        newOrder.style.border = "1px solid #ccc";
-        newOrder.style.borderRadius = "5px";
-        newOrder.style.backgroundColor = "#f9f9f9";
-        newOrder.style.display = "flex";
-        newOrder.style.flexDirection = "column";
-        newOrder.style.gap = "5px";
+            buttonDiv.appendChild(modifyButton);
+            newOrder.appendChild(buttonDiv); 
 
         container.appendChild(newOrder);
     });
@@ -328,76 +303,43 @@ function displayOrders(orders) {
 
 
 
+function createTable(jsonString){
+
+    let items = createListFromJSONString(jsonString);
+
+    const table = document.createElement('table');
+    table.className = "event-table";
+    const tableBody = document.createElement('tbody');
+    tableBody.className = "";
 
 
-    function displayPosts(items) {    
-        const item_container = document.getElementById("itemContainer");
-        
-        items.forEach(items => {
-          
-            const newItem = document.createElement("div");
-            newItem.className = "item";        
+    const thRow = tableBody.insertRow();
+
     
-                const itemHeader = document.createElement("div");
-                itemHeader.className = "item-header";
-        
-                    const id_span = document.createElement("span");
-                    id_span.className = "item-id";
-                    id_span.textContent = "ID: " + items.id;
-                    const name_spam = document.createElement("span");
-                    name_spam.className = "item-name";
-                    name_spam.textContent = items.name; 
-                    itemHeader.appendChild(name_spam);
-                    itemHeader.appendChild(id_span); 
-        
-                const imageDiv = document.createElement("div");
-                imageDiv.className = "item-imageDiv";
-                
-                    const image = document.createElement("img");
-                    image.className = "item-image";
-                    image.src = items.imageUrl;
-                    imageDiv.appendChild(image);      
-        
-                const itemBody = document.createElement("div");
-                itemBody.className = "item-content";
-                itemBody.textContent = items.description;
-        
-        
-                const itemFotter = document.createElement("div");
-                itemFotter.className = "item-footer";
-        
-                    const price = document.createElement("span");
-                    price.className = "item-price";
-                    price.textContent = "Price: " + items.price + " EUR";
-                    const category = document.createElement("span");
-                    category.className = "item-category";
-                    category.textContent = "Category: " + items.category;
-        
-                    itemFotter.appendChild(price);
-                    itemFotter.appendChild(category); 
-                
-                const itemAddButton = document.createElement("button"); 
-                itemAddButton.className = "item-button";
-                itemAddButton.textContent = "Add to cart";
-                itemAddButton.onclick = async function() {                                    
-                    await addToCart(items.id);           
-                
-                };
-                
-        
-                newItem.appendChild(itemHeader);
-                newItem.appendChild(imageDiv);
-                newItem.appendChild(itemBody); 
-                newItem.appendChild(itemFotter);
-                newItem.appendChild(itemAddButton);
-    
-            item_container.appendChild(newItem);
-    
-            console.log(offset);
-            offset++;
-        });
-    }
-    
-    
-    
-    
+    const headers = ["ID", "Name", "Description", "Price", "Category"];
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        thRow.appendChild(th);
+    });
+
+    items.forEach(item => {
+    const row = tableBody.insertRow();
+        row.insertCell(0).textContent = item.id || 'No name available';
+        row.insertCell(1).textContent = item.name || 'No name available';
+        row.insertCell(2).textContent = item.description || 'No name available';
+        row.insertCell(3).textContent = item.price || 'No name available';
+        row.insertCell(4).textContent = item.category || 'No name available';         
+
+    }); 
+
+    table.appendChild(tableBody);
+
+    return table;
+}
+
+
+function createListFromJSONString(jsonString){
+    return jsonString ? JSON.parse(jsonString) : []; 
+}
+
