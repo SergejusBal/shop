@@ -1,5 +1,5 @@
 //var url = "http://35.228.181.251:8080";
-var url = "http://127.0.0.1:7778";
+var url = "http://localhost:8080";
 var offset = 0;
 
 document.getElementById("Login").addEventListener("click", async function(event) {
